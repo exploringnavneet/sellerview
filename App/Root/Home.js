@@ -14,9 +14,10 @@ import {
 } from 'react-native';
 
 
-var API_URL = 'https://just-get.com/Home/Sellers/?RerquestCategoryId=97&MinLatitude=59.37260860543225&MaxLatitude=59.42800874997488&MinLongitude=24.57352461303708&MaxLongitude=24.76475538696286&pageSize=18&pageNo=0';
+var API_URL = 'https://just-get.com/Seller//ListOfArea/?RerquestCategoryId=97&MinLatitude=59.378117720839064&MaxLatitude=59.422507740867424&MinLongitude=24.561336655273408&MaxLongitude=24.776943344726533&pageSize=18&pageNo=0';
 import LocationButton from '../Component/LocationButton.js';
 var markerImg = require('../images/marker.png');
+
 class Home extends Component {
 
   constructor() {
@@ -54,11 +55,10 @@ class Home extends Component {
             longitudeDelta: 0.0421
           }
         });
-        alert(position.coords.latitude);
-        this.fetchData();
+        
       },
       (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 20000}
+      {}
     );
 
     this.watchID = navigator.geolocation.watchPosition((position) => {
@@ -71,14 +71,14 @@ class Home extends Component {
 
       this.onRegionChange(newRegion);
     });
-
+    
+    this.fetchData();
      
   }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
   }
-
 
    fetchData(){
     fetch(API_URL)
@@ -96,11 +96,8 @@ class Home extends Component {
                              description: y.AddressLine,
                              sellerId :y.SellerId
                             };
-                        })});
-        
-         
-      })
-       
+                        })});         
+      })       
        .done();
   }
 
@@ -112,7 +109,7 @@ class Home extends Component {
 
    this.setState({height:Dimensions.get('window').height * 2 / 4});
 
-    this.setState({width:Dimensions.get('window').width});
+   this.setState({width:Dimensions.get('window').width});
 }
 
   onRegionChange(region) {
@@ -141,9 +138,7 @@ class Home extends Component {
   }
 
   render() {
-       if (!this.state.loaded) {
-      return this.renderLoadingView();
-    }
+   
     return (
    <View style={[styles.container, {width:this.state.width, height:this.state.height}]} onLayout={this.onLayout}>
         <MapView ref="map" style={{width:this.state.width, height:this.state.height}} region={this.state.region} onRegionChange={this.onRegionChange}>
